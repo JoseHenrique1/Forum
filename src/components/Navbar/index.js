@@ -2,9 +2,9 @@ import Link from "next/link";
 function Navbar() {
     return ( 
         <nav>
-            <Link href="#">Temas</Link>
-            <Link href="#">Cadastro</Link>
-            <Link href="#">Login</Link>
+            <Link href="/temas">Temas</Link>
+            <Link href="/cadastro">Cadastro</Link>
+            <Link href="/login">Login</Link>
         </nav>
      );
 }

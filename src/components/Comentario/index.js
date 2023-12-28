@@ -4,6 +4,10 @@ import Resposta from "../Resposta";
 
 
 function Comentario({comentario}) {
+    const [mostrarRespostas, setMostrarRespostas] = useState(false);
+    const [responder, setResponder] = useState(false);
+
+    //tratando dados vindos da api
     const {mensagem, usuarioId} = comentario;
     const [respostas, setRespostas] = useState([]);
     useEffect(()=>{setRespostas(comentario.respostas)});
@@ -16,8 +20,19 @@ function Comentario({comentario}) {
             </div>
             <p>{mensagem}</p>
             <div>
+                <button onClick={()=>setMostrarRespostas(m=> !m)}>Ver respostas</button>
+                <button onClick={()=>setResponder(r=>!r)}>Responder</button>
                 {
-                    respostas.map((resposta)=>{
+                    responder && 
+                    <form>
+                        <input type="text" required/>
+                        <input type="submit" value="enviar"/>
+                    </form>
+                }
+            </div>
+            <div>
+                {
+                    mostrarRespostas && respostas.map((resposta)=>{
                         return <Resposta key={resposta.id} resposta={resposta} />
                     })
                 }
