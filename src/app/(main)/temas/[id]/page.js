@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import Comentario from "@/components/Comentario/index.js";
 
 function Page({params}) {
+    const [tema, setTema] = useState("");
     const [interacoes, setInteracoes] = useState([]);
+    
+    function handleLoadTema () {
+        fetch('http://localhost:3000/temas/'+params.id)
+        .then(data=>data.json())
+        .then((data)=> setTema(data.conteudo))
+        .catch(error=>console.log(error));
+    }
 
     function handleLoadInteractions () {
         fetch('http://localhost:3000/interacoes/'+params.id)
@@ -12,11 +20,12 @@ function Page({params}) {
         .catch(error=>console.log(error));
     }
 
+    useEffect(handleLoadTema,[])
     useEffect(handleLoadInteractions, []);
+    
     return ( 
         <main>
-            id {params.id}
-            <h3>Tema a ser debatido</h3>
+            <h3>{tema}</h3>
             <section>
                 {
                     interacoes.map((interacao)=>{
