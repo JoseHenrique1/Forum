@@ -1,10 +1,12 @@
 'use client'
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 function Page() {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const route = useRouter();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -17,7 +19,9 @@ function Page() {
         .then(data=>data.json())
         .catch(console.error);
         if (req.msg=="success") {
-            alert('cadastrado com sucesso')  
+            route.replace('/login');
+        } else {
+            alert("Usuário já existe");
         }
     }
 
