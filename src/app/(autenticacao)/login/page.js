@@ -1,23 +1,27 @@
 'use client'
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation"
 
 function Page() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
+    const route = useRouter();
+
     async function handleSubmit(e) {
         e.preventDefault();
-        let data = {email, senha}
-        const req = await fetch('http://localhost:3000/autenticacao',{
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
+        const result = await signIn('credentials', {
+            email,
+            senha,
+            redirect: false
         })
-        .then(data=>data.json())
-        .catch(e=>console.log(e));
-        if (req.msg=="success") {
-            alert('login realizado com sucesso')  
-        }
+        if(result.error) {
+            alert("Verifique email e senha")
+            return
+        } 
+      
+        route.refresh()
     }
 
     return ( 
