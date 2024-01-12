@@ -6,16 +6,23 @@ export const nextAuthOptions = {
       CredentialsProvider({
         name: 'credentials',
         credentials: {
-          username: { label: "Username", type: "text", placeholder: "jsmith" },
-          password: { label: "Password", type: "password" }
+          email: { label: "Email", type: "email" },
+          senha: { label: "Senha", type: "password" }
         },
       
         async authorize(credentials, req) {
-          const user1 = {user:{ id: "1", name: "J Smith", email: "jsmith@example.com" }}
-          if (user1) {
-              return user1
+          let data = {email: credentials.email, senha: credentials.senha};
+          const requisicao = await fetch('http://localhost:3000/autenticacao',{
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+          })
+          .then(data=>data.json())
+          .catch(e=>console.log(e));
+          if (requisicao.msg=="success") {
+              return {user: requisicao.user}
           } else {
-              return null
+            return null
           }
         }
       })
