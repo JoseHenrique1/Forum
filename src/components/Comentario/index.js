@@ -9,8 +9,7 @@ function Comentario({comentario}) {
 
     //tratando dados vindos da api
     const {mensagem, usuarioId} = comentario;
-    const [respostas, setRespostas] = useState([]);
-    useEffect(()=>{setRespostas(comentario.respostas)});
+    const [respostas, setRespostas] = useState(comentario.respostas);
 
     return ( 
         <div>
