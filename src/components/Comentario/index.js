@@ -3,14 +3,32 @@ import Image from "next/image";
 import Resposta from "../Resposta";
 
 
-function Comentario({comentario}) {
+function Comentario({comentario, user}) {
     const [mostrarRespostas, setMostrarRespostas] = useState(false);
     const [responder, setResponder] = useState(false);
 
     //tratando dados vindos da api
-    const {mensagem, usuarioId} = comentario;
+    const {id, mensagem, usuarioId} = comentario;
     const [respostas, setRespostas] = useState(comentario.respostas);
 
+    async function handleSendResponse (e) {
+        e.preventDefault()
+        let data = {
+            mensagem : e.target.response.value,
+            usuarioId : user.id,
+            comentarioId: id 
+        }
+        await fetch('http://localhost:3000/respostas', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(data=>data.json())
+        .then((data)=>{
+            setRespostas([...respostas, data.resposta])
+        })
+        .catch(e=>console.log(e))
+    }
     return ( 
         <div>
             <div>
@@ -23,8 +41,8 @@ function Comentario({comentario}) {
                 <button onClick={()=>setResponder(r=>!r)}>Responder</button>
                 {
                     responder && 
-                    <form>
-                        <input type="text" required/>
+                    <form onSubmit={handleSendResponse}>
+                        <input type="text" name="response" required/>
                         <input type="submit" value="enviar"/>
                     </form>
                 }
