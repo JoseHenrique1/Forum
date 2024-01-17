@@ -3,13 +3,21 @@ import Image from "next/image";
 import Resposta from "../Resposta";
 
 
-function Comentario({comentario, user}) {
+function Comentario({comment, user}) {
     const [mostrarRespostas, setMostrarRespostas] = useState(false);
     const [responder, setResponder] = useState(false);
+    const [pageNumber, setPageNumber] = useState(0);
 
     //tratando dados vindos da api
-    const {id, mensagem, usuarioId} = comentario;
-    const [respostas, setRespostas] = useState(comentario.respostas);
+    const {id, mensagem, usuarioId, usuario:{nome, email}} = comment;
+    const [respostas, setRespostas] = useState([]);
+
+    function handleLoadResponse () {
+        fetch(`http://localhost:3000/respostas/?comentarioId=${id}&pageNumber=${pageNumber}`)
+        .then(data=>data.json())
+        .then(data=>setRespostas(data.respostas))
+        .catch(e=>console.log(e))
+    }
 
     async function handleSendResponse (e) {
         e.preventDefault()
@@ -29,11 +37,13 @@ function Comentario({comentario, user}) {
         })
         .catch(e=>console.log(e))
     }
+
+    useEffect(handleLoadResponse, [])
     return ( 
         <div>
             <div>
                 <Image src="/usuarioPadrao.png" width={50} height={50} alt="avatar" />
-                <p>Username {usuarioId}</p>
+                <p>{nome||email}</p>
             </div>
             <p>{mensagem}</p>
             <div>

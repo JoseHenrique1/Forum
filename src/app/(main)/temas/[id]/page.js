@@ -6,7 +6,8 @@ import { useSession } from "next-auth/react";
 function Page({params}) {
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
-    const [interacoes, setInteracoes] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [pageNumber, setPageNumber] = useState(0)
     
     function handleLoadTema () {
         fetch('http://localhost:3000/temas/'+params.id)
@@ -15,15 +16,15 @@ function Page({params}) {
         .catch(error=>console.log(error));
     }
 
-    function handleLoadInteractions () {
-        fetch('http://localhost:3000/interacoes/'+params.id)
+    function handleLoadComments () {
+        fetch(`http://localhost:3000/comentarios/?temaId=${params.id}&pageNumber=${pageNumber}`)
         .then(data=>data.json())
-        .then(data=>setInteracoes(data))
-        .catch(error=>console.log(error));
+        .then(data=>setComments(data.comentarios))
+        .catch(error=>console.log(error)); 
     }
 
     useEffect(handleLoadTema,[])
-    useEffect(handleLoadInteractions, []);
+    useEffect(handleLoadComments, []);
 
     async function handleSendComment (e) {
         e.preventDefault();
@@ -42,25 +43,24 @@ function Page({params}) {
             .then(data=>data.json())
             .then((data)=>{
                 console.log(data)
-                setInteracoes([...interacoes, {...data.comentario, respostas:[]}])
+                //setComments([...comments, {...data.comentario}])
             })
             .catch(e=>console.log(e))
         }
         e.target.reset()
     }
-    
     return ( 
         <main>
             <h3>{tema}</h3>
-            <p>{session?.user.nome} faça um comentario</p>
+            <p>{session?.user.nome} Faça um comentario!</p>
             <form onSubmit={handleSendComment}>
                 <textarea name="comment" required />
                 <input type="submit" value="Enviar" />
             </form>
             <section>
                 {
-                    session?.user && interacoes.map((interacao)=>{
-                        return <Comentario key={interacao.id} comentario={interacao} user={session.user} />
+                    session?.user && comments.map((comment)=>{  
+                        return <Comentario key={comment.id} comment={comment} user={session.user} />  
                     })
                 }
             </section>   
