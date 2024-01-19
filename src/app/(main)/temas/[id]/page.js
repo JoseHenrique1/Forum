@@ -6,7 +6,8 @@ import { useSession } from "next-auth/react";
 function Page({params}) {
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
-    const [comments, setComments] = useState([]);
+    const [commentsPublic, setCommentsPublic] = useState([]);
+    const [commentsPersonal, setCommentsPersonal] = useState([]);
     const [pageNumber, setPageNumber] = useState(0)
     
     function handleLoadTema () {
@@ -17,14 +18,17 @@ function Page({params}) {
     }
 
     function handleLoadComments () {
-        fetch(`http://localhost:3000/comentarios/?temaId=${params.id}&pageNumber=${pageNumber}`)
+        session != undefined && fetch(`http://localhost:3000/comentarios/?temaId=${params.id}&pageNumber=${pageNumber}&usuarioId=${session?.user.id}`)
         .then(data=>data.json())
-        .then(data=>setComments(data.comentarios))
+        .then((data)=>{
+            setCommentsPersonal(data.comentariosPessoais);
+            setCommentsPublic(data.comentariosPublicos);
+        })
         .catch(error=>console.log(error)); 
     }
 
     useEffect(handleLoadTema,[])
-    useEffect(handleLoadComments, []);
+    useEffect(handleLoadComments, [session]);
 
     async function handleSendComment (e) {
         e.preventDefault();
@@ -34,7 +38,6 @@ function Page({params}) {
                 usuarioId : session.user.id,
                 temaId: params.id 
             }
-            console.log(data)
             await fetch('http://localhost:3000/comentarios', {
                 method: "POST",
                 body: JSON.stringify(data),
@@ -42,8 +45,13 @@ function Page({params}) {
             })
             .then(data=>data.json())
             .then((data)=>{
-                console.log(data)
-                //setComments([...comments, {...data.comentario}])
+                setCommentsPersonal([...commentsPersonal, {
+                    ...data.comentario, 
+                    usuario:{
+                        nome: session?.user.nome,
+                        email: session?.user.email,
+                    }
+                }])
             })
             .catch(e=>console.log(e))
         }
@@ -59,7 +67,12 @@ function Page({params}) {
             </form>
             <section>
                 {
-                    session?.user && comments.map((comment)=>{  
+                    session?.user && commentsPersonal.map((comment)=>{  
+                        return <Comentario key={comment.id} comment={comment} user={session.user} />  
+                    })
+                }
+                {
+                    session?.user && commentsPublic.map((comment)=>{  
                         return <Comentario key={comment.id} comment={comment} user={session.user} />  
                     })
                 }

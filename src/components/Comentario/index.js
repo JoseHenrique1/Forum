@@ -10,12 +10,16 @@ function Comentario({comment, user}) {
 
     //tratando dados vindos da api
     const {id, mensagem, usuarioId, usuario:{nome, email}} = comment;
-    const [respostas, setRespostas] = useState([]);
+    const [responsesPublic, setResponsesPublic] = useState([]);
+    const [responsesPersonal, setResponsesPersonal] = useState([]);
 
     function handleLoadResponse () {
-        fetch(`http://localhost:3000/respostas/?comentarioId=${id}&pageNumber=${pageNumber}`)
+        fetch(`http://localhost:3000/respostas/?comentarioId=${id}&pageNumber=${pageNumber}&usuarioId=${user.id}`)
         .then(data=>data.json())
-        .then(data=>setRespostas(data.respostas))
+        .then((data)=>{
+            setResponsesPublic(data.respostasPublicas);
+            setResponsesPersonal(data.respostasPessoais);
+        })
         .catch(e=>console.log(e))
     }
 
@@ -33,7 +37,9 @@ function Comentario({comment, user}) {
         })
         .then(data=>data.json())
         .then((data)=>{
-            setRespostas([...respostas, data.resposta])
+            setResponsesPersonal((e)=>{
+                return [...e, {...data.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}]
+            })
         })
         .catch(e=>console.log(e))
     }
@@ -59,7 +65,12 @@ function Comentario({comment, user}) {
             </div>
             <div>
                 {
-                    mostrarRespostas && respostas.map((resposta)=>{
+                    mostrarRespostas && responsesPersonal.map((resposta)=>{
+                        return <Resposta key={resposta.id} resposta={resposta} />
+                    })
+                }
+                {
+                    mostrarRespostas && responsesPublic.map((resposta)=>{
                         return <Resposta key={resposta.id} resposta={resposta} />
                     })
                 }
