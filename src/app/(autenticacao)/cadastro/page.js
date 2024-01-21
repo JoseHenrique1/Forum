@@ -11,7 +11,7 @@ function Page() {
     async function handleSubmit(e) {
         e.preventDefault();
         let data = {nome, email, senha}
-        const req = await fetch('http://localhost:3000/cadastro',{
+        const req = await fetch('http://localhost:3000/usuarios',{
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}

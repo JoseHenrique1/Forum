@@ -11,12 +11,7 @@ export const nextAuthOptions = {
         },
       
         async authorize(credentials, req) {
-          let data = {email: credentials.email, senha: credentials.senha};
-          const requisicao = await fetch('http://localhost:3000/autenticacao',{
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-          })
+          const requisicao = await fetch(`http://localhost:3000/usuarios/?email=${credentials.email}&senha=${credentials.senha}`)
           .then(data=>data.json())
           .catch(e=>console.log(e));
           if (requisicao.msg=="success") {
