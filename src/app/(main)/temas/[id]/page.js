@@ -9,7 +9,7 @@ function Page({params}) {
     const [commentsPublic, setCommentsPublic] = useState([]);
     const [commentsPersonal, setCommentsPersonal] = useState([]);
     const [pageNumber, setPageNumber] = useState(0)
-    
+
     function handleLoadTema () {
         fetch('http://localhost:3000/temas/'+params.id)
         .then(data=>data.json())
@@ -22,13 +22,13 @@ function Page({params}) {
         .then(data=>data.json())
         .then((data)=>{
             setCommentsPersonal(data.comentariosPessoais);
-            setCommentsPublic(data.comentariosPublicos);
+            setCommentsPublic((e)=>{
+                return [...e, ...data.comentariosPublicos]
+            });
         })
         .catch(error=>console.log(error)); 
     }
 
-    useEffect(handleLoadTema,[])
-    useEffect(handleLoadComments, [session]);
 
     async function handleSendComment (e) {
         e.preventDefault();
@@ -57,6 +57,10 @@ function Page({params}) {
         }
         e.target.reset()
     }
+
+    useEffect(handleLoadTema,[])
+    useEffect(handleLoadComments, [session,pageNumber]);
+
     return ( 
         <main>
             <h3>{tema}</h3>
@@ -76,7 +80,10 @@ function Page({params}) {
                         return <Comentario key={comment.id} comment={comment} user={session.user} />  
                     })
                 }
-            </section>   
+            </section> 
+            <section>
+                <button onClick={()=>setPageNumber(e=>e+1)} >Mais comentarios</button>
+            </section>  
         </main>
      );
 }
