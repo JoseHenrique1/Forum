@@ -13,12 +13,14 @@ function Comentario({comment, user}) {
     const [responsesPublic, setResponsesPublic] = useState([]);
     const [responsesPersonal, setResponsesPersonal] = useState([]);
 
-    function handleLoadResponse () {
+    function handleLoadResponses () {
         fetch(`http://localhost:3000/respostas/?comentarioId=${id}&pageNumber=${pageNumber}&usuarioId=${user.id}`)
         .then(data=>data.json())
         .then((data)=>{
-            setResponsesPublic(data.respostasPublicas);
             setResponsesPersonal(data.respostasPessoais);
+            setResponsesPublic((e)=>{
+                return [...e, ...data.respostasPublicas]
+            });
         })
         .catch(e=>console.log(e))
     }
@@ -44,7 +46,7 @@ function Comentario({comment, user}) {
         .catch(e=>console.log(e))
     }
 
-    useEffect(handleLoadResponse, [])
+    useEffect(handleLoadResponses, [pageNumber])
     return ( 
         <div>
             <div>
@@ -75,6 +77,10 @@ function Comentario({comment, user}) {
                     })
                 }
             </div>
+            <section>
+                <button onClick={()=>setPageNumber(e=>e+1)} >Mais respostas</button>
+            </section> 
+            <hr />
             <hr />
         </div>
      );

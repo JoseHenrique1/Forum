@@ -1,13 +1,14 @@
 import Image from "next/image";
 
 function Resposta({resposta}) {
+    const {usuario: {nome, email}, mensagem} = resposta;
     return ( 
         <div>
             <div>
                 <Image width={50} height={50} src="/usuarioPadrao.png" alt="avatar" />
-                <p>Username {resposta.usuarioId}</p>
+                <p>{nome || email}</p>
             </div>
-            <p>{resposta.mensagem}</p>
+            <p>{mensagem}</p>
         </div>
      );
 }
