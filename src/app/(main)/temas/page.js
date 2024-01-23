@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 function Page() {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [themes, setThemes] = useState([]);
 
     function handleLoadThemes() {
-        fetch('http://localhost:3000/temas')
+        fetch(API_URL+'temas')
         .then(data=>data.json())
         .then(data=>setThemes(data))
         .catch(error=>console.log(error))

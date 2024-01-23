@@ -4,6 +4,7 @@ import Comentario from "@/components/Comentario/index.js";
 import { useSession } from "next-auth/react";
 
 function Page({params}) {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
     const [commentsPublic, setCommentsPublic] = useState([]);
@@ -11,14 +12,14 @@ function Page({params}) {
     const [pageNumber, setPageNumber] = useState(0)
 
     function handleLoadTema () {
-        fetch('http://localhost:3000/temas/'+params.id)
+        fetch(API_URL+'temas/'+params.id)
         .then(data=>data.json())
         .then((data)=> setTema(data.conteudo))
         .catch(error=>console.log(error));
     }
 
     function handleLoadComments () {
-        session != undefined && fetch(`http://localhost:3000/comentarios/?temaId=${params.id}&pageNumber=${pageNumber}&usuarioId=${session?.user.id}`)
+        session != undefined && fetch(API_URL+`comentarios/?temaId=${params.id}&pageNumber=${pageNumber}&usuarioId=${session?.user.id}`)
         .then(data=>data.json())
         .then((data)=>{
             setCommentsPersonal(data.comentariosPessoais);
@@ -38,7 +39,7 @@ function Page({params}) {
                 usuarioId : session.user.id,
                 temaId: params.id 
             }
-            await fetch('http://localhost:3000/comentarios', {
+            await fetch(API_URL+'comentarios', {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {"Content-type": "application/json; charset=UTF-8"}

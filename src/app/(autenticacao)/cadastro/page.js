@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 function Page() {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -11,7 +12,7 @@ function Page() {
     async function handleSubmit(e) {
         e.preventDefault();
         let data = {nome, email, senha}
-        const req = await fetch('http://localhost:3000/usuarios',{
+        const req = await fetch(API_URL+'usuarios',{
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}

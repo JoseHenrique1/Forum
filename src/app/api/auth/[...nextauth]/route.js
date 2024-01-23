@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const nextAuthOptions = {
     providers: [
       CredentialsProvider({
@@ -11,7 +13,7 @@ export const nextAuthOptions = {
         },
       
         async authorize(credentials, req) {
-          const requisicao = await fetch(`http://localhost:3000/usuarios/?email=${credentials.email}&senha=${credentials.senha}`)
+          const requisicao = await fetch(API_URL+`usuarios/?email=${credentials.email}&senha=${credentials.senha}`)
           .then(data=>data.json())
           .catch(e=>console.log(e));
           if (requisicao.msg=="success") {
