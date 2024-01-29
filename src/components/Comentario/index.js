@@ -6,23 +6,27 @@ import Resposta from "../Resposta";
 function Comentario({comment, user}) {
     const [mostrarRespostas, setMostrarRespostas] = useState(false);
     const [responder, setResponder] = useState(false);
-    const [pageNumber, setPageNumber] = useState(0);
 
     //tratando dados vindos da api
-    const {id, mensagem, usuarioId, usuario:{nome, email}} = comment;
-    const [responsesPublic, setResponsesPublic] = useState([]);
-    const [responsesPersonal, setResponsesPersonal] = useState([]);
+    const {id, mensagem, usuario:{nome, email}} = comment;
+    const [responsesAll, setResponsesAll] = useState([]);
+    const [responses, setResponses] = useState([]);
+    const [responsesNumber, setResponsesNumber] = useState(5);
 
     function handleLoadResponses () {
-        fetch(`http://localhost:3000/respostas/?comentarioId=${id}&pageNumber=${pageNumber}&usuarioId=${user.id}`)
+        fetch(`http://localhost:3000/respostas/?comentarioId=${id}`)
         .then(data=>data.json())
         .then((data)=>{
-            setResponsesPersonal(data.respostasPessoais);
-            setResponsesPublic((e)=>{
-                return [...e, ...data.respostasPublicas]
-            });
+            setResponsesAll(data.respostas);  
         })
         .catch(e=>console.log(e))
+    }
+
+    function handleLoadMoreResponses () {
+        setResponses((e)=>{ 
+            if (e.length != 0 && e[e.length-1].id == responsesAll.slice(responsesNumber-5, responsesNumber)[4]?.id) {return e}
+            else { return [...e, ...responsesAll.slice(responsesNumber-5, responsesNumber)] }
+        })
     }
 
     async function handleSendResponse (e) {
@@ -39,18 +43,20 @@ function Comentario({comment, user}) {
         })
         .then(data=>data.json())
         .then((data)=>{
-            setResponsesPersonal((e)=>{
-                return [...e, {...data.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}]
+            setResponses((e)=>{
+                return [{...data.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}, ...e]
             })
         })
-        .catch(e=>console.log(e))
+        .catch(e=>console.log(e));
+        e.target.reset();
     }
 
-    useEffect(handleLoadResponses, [pageNumber])
+    useEffect(handleLoadResponses, []);
+    useEffect(handleLoadMoreResponses, [responsesAll ,responsesNumber]); 
     return ( 
         <div>
             <div>
-                <Image src="/usuarioPadrao.png" width={50} height={50} alt="avatar" />
+                <Image src="/usuarioPadrao.png" width={50} height={50} alt="avatar" priority={true} />
                 <p>{nome||email}</p>
             </div>
             <p>{mensagem}</p>
@@ -67,19 +73,18 @@ function Comentario({comment, user}) {
             </div>
             <div>
                 {
-                    mostrarRespostas && responsesPersonal.map((resposta)=>{
+                    mostrarRespostas && responses.map((resposta)=>{
                         return <Resposta key={resposta.id} resposta={resposta} />
-                    })
+                    })     
                 }
                 {
-                    mostrarRespostas && responsesPublic.map((resposta)=>{
-                        return <Resposta key={resposta.id} resposta={resposta} />
-                    })
+                    mostrarRespostas? 
+                        <button 
+                            onClick={()=>setResponsesNumber(e=>e+5)} 
+                            disabled={responsesNumber >= responsesAll.length? true: false}
+                        >Mais respostas</button> : <p></p>
                 }
             </div>
-            <section>
-                <button onClick={()=>setPageNumber(e=>e+1)} >Mais respostas</button>
-            </section> 
             <hr />
             <hr />
         </div>
