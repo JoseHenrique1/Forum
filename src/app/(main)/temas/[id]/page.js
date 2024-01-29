@@ -7,9 +7,9 @@ function Page({params}) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
-    const [commentsPublic, setCommentsPublic] = useState([]);
-    const [commentsPersonal, setCommentsPersonal] = useState([]);
-    const [pageNumber, setPageNumber] = useState(0)
+    const [commentsAll, setCommentsAll] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [commentsNumber, setCommentsNumber] = useState(5);
 
     function handleLoadTema () {
         fetch(API_URL+'temas/'+params.id)
@@ -19,17 +19,19 @@ function Page({params}) {
     }
 
     function handleLoadComments () {
-        session != undefined && fetch(API_URL+`comentarios/?temaId=${params.id}&pageNumber=${pageNumber}&usuarioId=${session?.user.id}`)
+        fetch(API_URL+`comentarios/?temaId=${params.id}`) 
         .then(data=>data.json())
         .then((data)=>{
-            setCommentsPersonal(data.comentariosPessoais);
-            setCommentsPublic((e)=>{
-                return [...e, ...data.comentariosPublicos]
-            });
+            setCommentsAll(data.comentarios);
         })
         .catch(error=>console.log(error)); 
     }
 
+    function handleLoadMoreComments () {
+        setComments((e)=>{ 
+            if (e.length != 0 && e[e.length-1].id == commentsAll.slice(commentsNumber-5, commentsNumber)[4]?.id) {return e}
+            else { return [...e, ...commentsAll.slice(commentsNumber-5, commentsNumber)] }
+        }) }
 
     async function handleSendComment (e) {
         e.preventDefault();
@@ -46,13 +48,16 @@ function Page({params}) {
             })
             .then(data=>data.json())
             .then((data)=>{
-                setCommentsPersonal([...commentsPersonal, {
-                    ...data.comentario, 
-                    usuario:{
-                        nome: session?.user.nome,
-                        email: session?.user.email,
-                    }
-                }])
+                setComments([
+                    {
+                        ...data.comentario, 
+                        usuario:{
+                            nome: session?.user.nome,
+                            email: session?.user.email,
+                        }
+                    },
+                    ...comments
+                ])
             })
             .catch(e=>console.log(e))
         }
@@ -60,7 +65,8 @@ function Page({params}) {
     }
 
     useEffect(handleLoadTema,[])
-    useEffect(handleLoadComments, [session,pageNumber]);
+    useEffect(handleLoadComments, []);
+    useEffect(handleLoadMoreComments, [commentsAll, commentsNumber])
 
     return ( 
         <main>
@@ -72,18 +78,18 @@ function Page({params}) {
             </form>
             <section>
                 {
-                    session?.user && commentsPersonal.map((comment)=>{  
-                        return <Comentario key={comment.id} comment={comment} user={session.user} />  
-                    })
-                }
-                {
-                    session?.user && commentsPublic.map((comment)=>{  
+                    session?.user && comments.map((comment)=>{  
                         return <Comentario key={comment.id} comment={comment} user={session.user} />  
                     })
                 }
             </section> 
             <section>
-                <button onClick={()=>setPageNumber(e=>e+1)} >Mais comentarios</button>
+                <button 
+                    onClick={()=>{setCommentsNumber(e=>e+5)}}
+                    disabled={
+                        commentsNumber >= commentsAll.length? true: false
+                    }
+                > Mais comentarios </button>
             </section>  
         </main>
      );
