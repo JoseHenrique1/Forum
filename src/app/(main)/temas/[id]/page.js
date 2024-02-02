@@ -1,9 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Comentario from "@/components/Comentario/index.js";
 import { useSession } from "next-auth/react";
+import { io } from "socket.io-client";
 
 function Page({params}) {
+    const socket = useRef(null);
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
@@ -41,30 +43,46 @@ function Page({params}) {
                 usuarioId : session.user.id,
                 temaId: params.id 
             }
-            await fetch(API_URL+'comentarios', {
+            let req = await fetch(API_URL+'comentarios', {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {"Content-type": "application/json; charset=UTF-8"}
             })
             .then(data=>data.json())
-            .then((data)=>{
-                setComments([
-                    {
-                        ...data.comentario, 
-                        usuario:{
-                            nome: session?.user.nome,
-                            email: session?.user.email,
-                        }
-                    },
-                    ...comments
-                ])
-            })
+            .then(data=>data)
             .catch(e=>console.log(e))
+
+            setComments([
+                {
+                    ...req.comentario, 
+                    usuario:{
+                        nome: session?.user.nome,
+                        email: session?.user.email,
+                    }
+                },
+                ...comments
+            ])
+            let dataComment = {
+                ...req.comentario,
+                usuario: {
+                    ...session.user
+                }
+            }
+            socket.current.emit('temas', {
+                temaId:params.id, 
+                comentario: dataComment,
+            }); 
         }
         e.target.reset()
     }
-
-    useEffect(handleLoadTema,[])
+    useEffect(()=>{
+        socket.current = io('http://localhost:3000');
+        socket.current.on('tema'+params.id, (data)=>{
+            setComments(e=>[data.comentario, ...e])            
+        })
+        return () => {socket.current.disconnect()}
+    },[]);
+    useEffect(handleLoadTema,[]);
     useEffect(handleLoadComments, []);
     useEffect(handleLoadMoreComments, [commentsAll, commentsNumber])
 
@@ -78,8 +96,8 @@ function Page({params}) {
             </form>
             <section>
                 {
-                    session?.user && comments.map((comment)=>{  
-                        return <Comentario key={comment.id} comment={comment} user={session.user} />  
+                    session?.user && socket && comments.map((comment)=>{  
+                        return <Comentario key={comment.id} comment={comment} user={session.user} socket={socket}/>  
                     })
                 }
             </section> 
