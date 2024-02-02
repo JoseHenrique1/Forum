@@ -3,7 +3,7 @@ import Image from "next/image";
 import Resposta from "../Resposta";
 
 
-function Comentario({comment, user}) {
+function Comentario({comment, user, socket}) {
     const [mostrarRespostas, setMostrarRespostas] = useState(false);
     const [responder, setResponder] = useState(false);
 
@@ -36,21 +36,35 @@ function Comentario({comment, user}) {
             usuarioId : user.id,
             comentarioId: id 
         }
-        await fetch('http://localhost:3000/respostas', {
+        let req = await fetch('http://localhost:3000/respostas', {
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(data=>data.json())
-        .then((data)=>{
-            setResponses((e)=>{
-                return [{...data.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}, ...e]
-            })
-        })
+        .then(data=>data)
         .catch(e=>console.log(e));
+        setResponses((e)=>{
+            return [{...req.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}, ...e]
+        })
+        let dataResponse = {
+            ...req.resposta,
+            usuario: {
+                ...user
+            }
+        }
+        socket.current.emit('comentarios', {
+            comentarioId: id, 
+            resposta: dataResponse,
+        });  
         e.target.reset();
     }
-
+    useEffect(()=>{
+        socket.current.on('comentario'+id, (data)=>{
+            setResponses(e=>[data.resposta, ...e])   
+        })
+        return () => {socket.current.disconnect()}
+    },[]);
     useEffect(handleLoadResponses, []);
     useEffect(handleLoadMoreResponses, [responsesAll ,responsesNumber]); 
     return ( 
@@ -74,15 +88,13 @@ function Comentario({comment, user}) {
             <div>
                 {
                     mostrarRespostas && responses.map((resposta)=>{
-                        return <Resposta key={resposta.id} resposta={resposta} />
-                    })     
+                        return <Resposta key={resposta.id} resposta={resposta} />})  
                 }
                 {
-                    mostrarRespostas? 
-                        <button 
+                    mostrarRespostas && <button 
                             onClick={()=>setResponsesNumber(e=>e+5)} 
                             disabled={responsesNumber >= responsesAll.length? true: false}
-                        >Mais respostas</button> : <p></p>
+                    >Mais respostas</button>
                 }
             </div>
             <hr />
