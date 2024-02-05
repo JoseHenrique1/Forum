@@ -7,6 +7,7 @@ import ContainerComentarios from "@/components/ContainerComentarios";
 function Page({params}) {
     const socket = useRef(null);
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
     const { data: session, status } = useSession();
     const [tema, setTema] = useState("");
 
@@ -18,7 +19,7 @@ function Page({params}) {
     }
 
     useEffect(()=>{
-        socket.current = io(API_URL);
+        socket.current = io(SOCKET_URL);
         return () => {socket.current.disconnect()}
     },[]);
     useEffect(handleLoadTema,[]);
