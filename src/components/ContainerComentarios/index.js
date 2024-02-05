@@ -51,7 +51,7 @@ function ContainerComentarios({temaId, user, socket}) {
             ...comments
         ]);
 
-        socket.current.emit('temas', {
+        socket.emit('temas', {
             temaId,
             comentario: {
                 ...req.comentario,
@@ -63,7 +63,7 @@ function ContainerComentarios({temaId, user, socket}) {
     }
 
     useEffect(()=>{
-        socket.current.on('tema'+temaId, (data)=>{
+        socket.on('tema'+temaId, (data)=>{
             setComments(e=>[data.comentario, ...e])            
         })
     },[]);

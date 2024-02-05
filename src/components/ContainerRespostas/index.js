@@ -44,7 +44,7 @@ function ContainerRespostas({comentarioId, socket, user}) {
             return [{...req.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}, ...e]
         })
 
-        socket.current.emit('comentarios', {
+        socket.emit('comentarios', {
             comentarioId, 
             resposta: {
                 ...req.resposta,
@@ -56,7 +56,7 @@ function ContainerRespostas({comentarioId, socket, user}) {
     }
 
     useEffect(()=>{
-        socket.current.on('comentario'+comentarioId, (data)=>{
+        socket.on('comentario'+comentarioId, (data)=>{
             setResponses(e=>[data.resposta, ...e])   
         })
     },[]);

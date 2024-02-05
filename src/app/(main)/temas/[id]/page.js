@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import ContainerComentarios from "@/components/ContainerComentarios";
 
 function Page({params}) {
-    const socket = useRef(null);
+    const [socket, setSocket] = useState(null)
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL
     const { data: session, status } = useSession();
@@ -19,8 +19,8 @@ function Page({params}) {
     }
 
     useEffect(()=>{
-        socket.current = io(SOCKET_URL);
-        return () => {socket.current.disconnect()}
+        setSocket(io(SOCKET_URL));
+        return () => {socket?.disconnect()}
     },[]);
     useEffect(handleLoadTema,[]);
     return ( 
@@ -28,9 +28,9 @@ function Page({params}) {
             <h3>{tema}</h3>
             <p>{session?.user.nome} Faça um comentario!</p>
             {
-                session && socket.current?.connected && <ContainerComentarios temaId={params.id} socket={socket} user={session.user} /> 
-            }     
-        </main>
+                session && socket && <ContainerComentarios temaId={params.id} socket={socket} user={session.user} /> 
+            }   
+        </main>        
      );
 }
 
