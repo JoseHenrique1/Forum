@@ -13,7 +13,7 @@ export const nextAuthOptions = {
         },
       
         async authorize(credentials, req) {
-          const requisicao = await fetch(API_URL+`usuarios/?email=${credentials.email}&senha=${credentials.senha}`)
+          const requisicao = await fetch(API_URL+`/usuarios/?email=${credentials.email}&senha=${credentials.senha}`)
           .then(data=>data.json())
           .catch(e=>console.log(e));
           if (requisicao.msg=="success") {

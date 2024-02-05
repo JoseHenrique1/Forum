@@ -10,7 +10,7 @@ function Page() {
     const [themes, setThemes] = useState([]);
 
     function handleLoadThemes() {
-        fetch(API_URL+'temas')
+        fetch(API_URL+'/temas')
         .then(data=>data.json())
         .then(data=>setThemes(data))
         .catch(error=>console.log(error))
@@ -18,7 +18,7 @@ function Page() {
 
     function handleCreateThemes (e) {
         e.preventDefault();
-        fetch(API_URL+'temas', { 
+        fetch(API_URL+'/temas', { 
             method: "POST", 
             body: JSON.stringify({
                 usuarioId: session?.user.id,

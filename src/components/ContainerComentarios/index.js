@@ -9,7 +9,7 @@ function ContainerComentarios({temaId, user, socket}) {
     const [commentsNumber, setCommentsNumber] = useState(5);
 
     function handleLoadComments () {
-        fetch(API_URL+`comentarios/?temaId=${temaId}`) 
+        fetch(API_URL+`/comentarios/?temaId=${temaId}`) 
         .then(data=>data.json())
         .then((data)=>{
             setCommentsAll(data.comentarios);
@@ -31,7 +31,7 @@ function ContainerComentarios({temaId, user, socket}) {
             usuarioId : user.id,
             temaId
         };
-        let req = await fetch(API_URL+'comentarios', {
+        let req = await fetch(API_URL+'/comentarios', {
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -66,7 +66,6 @@ function ContainerComentarios({temaId, user, socket}) {
         socket.current.on('tema'+temaId, (data)=>{
             setComments(e=>[data.comentario, ...e])            
         })
-        return () => {socket.current.disconnect()}
     },[]);
     useEffect(handleLoadComments, []);
     useEffect(handleLoadMoreComments, [commentsAll, commentsNumber]);

@@ -12,7 +12,7 @@ function Page() {
     async function handleSubmit(e) {
         e.preventDefault();
         let data = {nome, email, senha}
-        const req = await fetch(API_URL+'usuarios',{
+        const req = await fetch(API_URL+'/usuarios',{
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}

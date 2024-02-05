@@ -11,14 +11,14 @@ function Page({params}) {
     const [tema, setTema] = useState("");
 
     function handleLoadTema () {
-        fetch(API_URL+'temas/'+params.id)
+        fetch(API_URL+'/temas/'+params.id)
         .then(data=>data.json())
         .then((data)=> setTema(data.conteudo))
         .catch(error=>console.log(error));
     }
 
     useEffect(()=>{
-        socket.current = io('http://localhost:3000');
+        socket.current = io(API_URL);
         return () => {socket.current.disconnect()}
     },[]);
     useEffect(handleLoadTema,[]);

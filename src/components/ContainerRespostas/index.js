@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import Resposta from "../Resposta";
 
 function ContainerRespostas({comentarioId, socket, user}) {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [responsesAll, setResponsesAll] = useState([]);
     const [responses, setResponses] = useState([]);
     const [responsesNumber, setResponsesNumber] = useState(5);
 
     function handleLoadResponses () {
-        fetch(`http://localhost:3000/respostas/?comentarioId=${comentarioId}`)
+        fetch(API_URL+`/respostas/?comentarioId=${comentarioId}`)
         .then(data=>data.json())
         .then((data)=>{
             setResponsesAll(data.respostas);  
@@ -31,7 +32,7 @@ function ContainerRespostas({comentarioId, socket, user}) {
             usuarioId : user.id,
             comentarioId: comentarioId 
         }
-        let req = await fetch('http://localhost:3000/respostas', {
+        let req = await fetch(API_URL+'/respostas', {
             method: "POST",
             body: JSON.stringify(data),
             headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -58,7 +59,6 @@ function ContainerRespostas({comentarioId, socket, user}) {
         socket.current.on('comentario'+comentarioId, (data)=>{
             setResponses(e=>[data.resposta, ...e])   
         })
-        return () => {socket.current.disconnect()}
     },[]);
     useEffect(handleLoadResponses, []);
     useEffect(handleLoadMoreResponses, [responsesAll ,responsesNumber]); 
