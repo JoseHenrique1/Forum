@@ -2,6 +2,7 @@
 import Comentario from "../Comentario";
 import { useState, useEffect } from "react";
 import FormComentario from "../FormComentario";
+import Button from "../Button";
 
 function ContainerComentarios({temaId, user, socket}) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -43,10 +44,10 @@ function ContainerComentarios({temaId, user, socket}) {
                 }
             </section> 
             <section>
-                <button 
-                    onClick={()=>{setCommentsNumber(e=>e+5)}}
+                <Button 
+                    onclick={()=>{setCommentsNumber(e=>e+5)}}
                     disabled={commentsNumber >= commentsAll.length? true: false}
-                > Mais comentarios </button>
+                > Mais comentarios </Button>
             </section> 
         </div> 
     );

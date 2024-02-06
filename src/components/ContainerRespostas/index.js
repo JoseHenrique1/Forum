@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Resposta from "../Resposta";
+import Button from "../Button";
 import FormResposta from "../FormResposta";
 
 function ContainerRespostas({comentarioId, socket, user}) {
@@ -39,10 +40,10 @@ function ContainerRespostas({comentarioId, socket, user}) {
                 responses.map((resposta)=>{
                     return <Resposta key={resposta.id} resposta={resposta} />})  
             }
-            <button 
-                    onClick={()=>setResponsesNumber(e=>e+5)} 
+            <Button 
+                    onclick={()=>setResponsesNumber(e=>e+5)} 
                     disabled={responsesNumber >= responsesAll.length? true: false}
-            >Mais respostas</button>
+            >Mais respostas</Button>
         </div>
      );
 }
