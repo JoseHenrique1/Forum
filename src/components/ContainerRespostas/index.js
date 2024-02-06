@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Resposta from "../Resposta";
+import FormResposta from "../FormResposta";
 
 function ContainerRespostas({comentarioId, socket, user}) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -24,37 +25,6 @@ function ContainerRespostas({comentarioId, socket, user}) {
         })
     }
 
-    async function handleSendResponse (e) {
-        e.preventDefault()
-
-        let data = {
-            mensagem : e.target.response.value,
-            usuarioId : user.id,
-            comentarioId: comentarioId 
-        }
-        let req = await fetch(API_URL+'/respostas', {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(data=>data.json())
-        .catch(e=>console.log(e));
-
-        setResponses((e)=>{
-            return [{...req.resposta, usuario: {id: user.id, nome: user.nome, email: user.email}}, ...e]
-        })
-
-        socket.emit('comentarios', {
-            comentarioId, 
-            resposta: {
-                ...req.resposta,
-                usuario: {...user}
-            },
-        });  
-
-        e.target.reset();
-    }
-
     useEffect(()=>{
         socket.on('comentario'+comentarioId, (data)=>{
             setResponses(e=>[data.resposta, ...e])   
@@ -64,10 +34,7 @@ function ContainerRespostas({comentarioId, socket, user}) {
     useEffect(handleLoadMoreResponses, [responsesAll ,responsesNumber]); 
     return ( 
         <div>
-            <form onSubmit={handleSendResponse}>
-                <input type="text" name="response" required/>
-                <input type="submit" value="enviar"/>
-            </form>
+            <FormResposta setResponses={setResponses} socket={socket} comentarioId={comentarioId} user={user} />
             {
                 responses.map((resposta)=>{
                     return <Resposta key={resposta.id} resposta={resposta} />})  
