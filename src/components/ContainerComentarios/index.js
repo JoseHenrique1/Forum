@@ -1,6 +1,7 @@
 "use client";
 import Comentario from "../Comentario";
 import { useState, useEffect } from "react";
+import FormComentario from "../FormComentario";
 
 function ContainerComentarios({temaId, user, socket}) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -24,44 +25,6 @@ function ContainerComentarios({temaId, user, socket}) {
         }) 
     }
 
-    async function handleSendComment (e) {
-        e.preventDefault();
-        let data = {
-            mensagem : e.target.comment.value,
-            usuarioId : user.id,
-            temaId
-        };
-        let req = await fetch(API_URL+'/comentarios', {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(data=>data.json())
-        .then(data=>data)
-        .catch(e=>console.log(e));
-
-        setComments([
-            {
-                ...req.comentario, 
-                usuario:{
-                    nome: user.nome,
-                    email: user.email,
-                }
-            },
-            ...comments
-        ]);
-
-        socket.emit('temas', {
-            temaId,
-            comentario: {
-                ...req.comentario,
-                usuario: {...user}
-            },
-        }); 
-        
-        e.target.reset()
-    }
-
     useEffect(()=>{
         socket.on('tema'+temaId, (data)=>{
             setComments(e=>[data.comentario, ...e])            
@@ -70,25 +33,22 @@ function ContainerComentarios({temaId, user, socket}) {
     useEffect(handleLoadComments, []);
     useEffect(handleLoadMoreComments, [commentsAll, commentsNumber]);
     return ( 
-    <div>
-        <form onSubmit={handleSendComment}>
-            <textarea name="comment" required />
-            <input type="submit" value="Enviar" />
-        </form>
-        <section>
-            {
-                comments.map((comment)=>{  
-                    return <Comentario key={comment.id} comment={comment} user={user} socket={socket}/>  
-                })
-            }
-        </section> 
-        <section>
-            <button 
-                onClick={()=>{setCommentsNumber(e=>e+5)}}
-                disabled={commentsNumber >= commentsAll.length? true: false}
-            > Mais comentarios </button>
-        </section> 
-    </div> 
+        <div>
+            <FormComentario setComments={setComments} socket={socket} user={user} temaId={temaId}/>
+            <section>
+                {
+                    comments.map((comment)=>{  
+                        return <Comentario key={comment.id} comment={comment} user={user} socket={socket}/>  
+                    })
+                }
+            </section> 
+            <section>
+                <button 
+                    onClick={()=>{setCommentsNumber(e=>e+5)}}
+                    disabled={commentsNumber >= commentsAll.length? true: false}
+                > Mais comentarios </button>
+            </section> 
+        </div> 
     );
 }
 
