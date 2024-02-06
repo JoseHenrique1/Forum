@@ -1,4 +1,4 @@
-function FormComentario({setComments, socket, user, temaId}) {comments={comments}
+function FormComentario({setComments, socket, user, temaId}) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     async function handleSendComment (e) {
