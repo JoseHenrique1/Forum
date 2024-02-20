@@ -14,7 +14,7 @@
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 * Você possui instalado o `Node.js`
-* Você possui a api do forum instalada, caso não tenha, clone esse [repósitorio](https://exemplo.com/) e siga o processo de instalação.
+* Você possui a api do forum instalada, caso não tenha, clone esse [repósitorio](https://github.com/JoseHenrique1/ForumApi) e siga o processo de instalação.
 
 
 ## 🚀 Instalando DiversityForum
