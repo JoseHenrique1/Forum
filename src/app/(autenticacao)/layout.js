@@ -8,7 +8,7 @@ async function Layout({children}) {
         redirect('/temas');
     }
     return ( 
-        <main>{children}</main>
+        <div className="container max-w-screen-lg mx-auto my-0 ">{children}</div>
      );
 }
 

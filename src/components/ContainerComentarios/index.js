@@ -34,22 +34,22 @@ function ContainerComentarios({temaId, user, socket}) {
     useEffect(handleLoadComments, []);
     useEffect(handleLoadMoreComments, [commentsAll, commentsNumber]);
     return ( 
-        <div>
+        <>
             <FormComentario setComments={setComments} socket={socket} user={user} temaId={temaId}/>
-            <section>
+            <div className="space-y-8">
                 {
                     comments.map((comment)=>{  
                         return <Comentario key={comment.id} comment={comment} user={user} socket={socket}/>  
                     })
                 }
-            </section> 
-            <section>
-                <Button 
-                    onclick={()=>{setCommentsNumber(e=>e+5)}}
-                    disabled={commentsNumber >= commentsAll.length? true: false}
-                > Mais comentarios </Button>
-            </section> 
-        </div> 
+            </div> 
+            <button 
+                className="bg-transparent border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white border-2 px-4 py-2 rounded"
+                onClick={()=>{setCommentsNumber(e=>e+5)}}
+                disabled={commentsNumber >= commentsAll.length? true: false}
+            > Mais comentarios </button>
+            
+        </> 
     );
 }
 

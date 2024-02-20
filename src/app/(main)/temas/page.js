@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import FormTheme from "@/components/FormTheme";
 
 function Page() {
     const { data: session, status } = useSession();
@@ -33,24 +34,21 @@ function Page() {
     useEffect(handleLoadThemes, []);
 
     return ( 
-        <main>
-            <h1>Temas para debate</h1>
-            <form onSubmit={handleCreateThemes}>
-                <input type="text" name="theme" required />
-                <input type="submit" value="Criar tema"/>
-            </form>
-            <section>
-                {themes.map((theme)=>{
+        <div className='container max-w-screen-lg mx-auto my-0 p-2 sm:p-4 space-y-4'>
+            <h1 className='text-xl dark:text-white'>Temas para debate</h1>
+            <FormTheme handleCreateThemes={handleCreateThemes} />
+            {
+                themes.map((theme)=>{
                     const {id, conteudo, usuarioId } = theme;
                     return (
-                        <div key={id} >
-                            <p> {conteudo} </p>
-                            <Link href={"/temas/"+id} >Acessar</Link>
+                        <div key={id} className='w-full flex flex-col items-start bg-white shadow p-2 sm:p-4 dark:bg-slate-700 dark:shadow-sm  dark:shadow-blue-300'>
+                            <p className="dark:text-white"> {conteudo} </p>
+                            <Link href={"/temas/"+id} className='text-blue-400'>Acessar</Link>
                         </div>
                     )
-                })}
-            </section>
-        </main>
+                })
+            }
+        </div>
      );
 }
 

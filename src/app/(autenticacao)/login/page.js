@@ -25,23 +25,45 @@ function Page() {
     }
 
     return ( 
-        <main>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="email" 
-                    placeholder="Email@gmail.comm" 
-                    value={email} 
-                    onChange={(e)=>{setEmail(e.target.value)}}
-                    required/>
-                <input 
-                    type="password" 
-                    placeholder="Senha" 
-                    value={senha} 
-                    onChange={(e)=>{setSenha(e.target.value)}}
-                    required/>
-                <input type="submit" value="Fazer login" />
-            </form>
-        </main>
+        
+        <form className="sm:w-3/4 lg:w-1/2 p-2 sm:p-4 space-y-2 sm:space-y-4 mx-auto my-0" onSubmit={handleSubmit}>
+            <input 
+                type="email" 
+                placeholder="Email@gmail.comm" 
+                value={email} 
+                onChange={(e)=>{setEmail(e.target.value)}}
+                required
+                className="
+                        w-full
+                        border focus:outline-none focus:ring-2 hover:ring-1
+                        text-gray-700
+                        px-2 py-1 
+                        rounded
+                        dark:bg-slate-700 
+                        dark:text-gray-100
+                        dark:border-slate-600
+                        dark:ring-blue-300  
+                    "/>
+            <input 
+                type="password" 
+                placeholder="Senha" 
+                value={senha} 
+                onChange={(e)=>{setSenha(e.target.value)}}
+                required
+                className="
+                        w-full
+                        border focus:outline-none focus:ring-2 hover:ring-1
+                        text-gray-700
+                        px-2 py-1 
+                        rounded
+                        dark:bg-slate-700 
+                        dark:text-gray-100
+                        dark:border-slate-600
+                        dark:ring-blue-300  
+                    "/>
+            <input type="submit" value="Fazer login" className="w-32 bg-blue-400 px-4 py-2 rounded text-white focus:ring-2  " />
+        </form>
+        
      );
 }
 

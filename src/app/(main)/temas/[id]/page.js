@@ -24,13 +24,12 @@ function Page({params}) {
     },[]);
     useEffect(handleLoadTema,[]);
     return ( 
-        <main>
-            <h3>{tema}</h3>
-            <p>{session?.user.nome} Faça um comentario!</p>
+        <div className="container max-w-screen-lg mx-auto my-0 p-2 sm:p-4 space-y-4 ">
+            <p className="text-xl dark:text-white">{tema}</p>
             {
                 session && socket && <ContainerComentarios temaId={params.id} socket={socket} user={session.user} /> 
             }   
-        </main>        
+        </div>        
      );
 }
 

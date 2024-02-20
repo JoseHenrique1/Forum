@@ -36,14 +36,21 @@ function ContainerRespostas({comentarioId, socket, user}) {
     return ( 
         <div>
             <FormResposta setResponses={setResponses} socket={socket} comentarioId={comentarioId} user={user} />
+            {responses.length != 0 ? <div className="border-b-2 border-blue-400 bg-blue-50 dark:bg-slate-600">
             {
                 responses.map((resposta)=>{
                     return <Resposta key={resposta.id} resposta={resposta} />})  
             }
-            <Button 
-                    onclick={()=>setResponsesNumber(e=>e+5)} 
-                    disabled={responsesNumber >= responsesAll.length? true: false}
-            >Mais respostas</Button>
+            </div>
+            :
+            <></>}
+            <div className="flex items-center justify-center py-1">
+                <button
+                        className="bg-transparent border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white border-2 px-4 py-2 rounded-md " 
+                        onClick={()=>setResponsesNumber(e=>e+5)} 
+                        disabled={responsesNumber >= responsesAll.length? true: false}
+                >Mais respostas</button>
+            </div>
         </div>
      );
 }

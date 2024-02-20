@@ -8,18 +8,23 @@ function Comentario({comment, user, socket}) {
     const {id, mensagem, usuario:{nome, email}} = comment;
 
     return ( 
-        <div>
-            <div>
-                <Image src="/usuarioPadrao.png" width={50} height={50} alt="avatar" priority={true} />
-                <p>{nome||email}</p>
+        <div className="bg-white p-4 space-y-2 shadow-md dark:bg-slate-700 dark:shadow-sm dark:shadow-blue-300">
+            <div className="flex h-16 space-x-2 ">
+                <div className="h-16">
+                    <Image src="/usuarioPadrao.png" className="h-full w-auto rounded-full " width={50} height={50} alt="avatar" priority={true} />
+                </div>
+                <div className="flex flex-col justify-center">
+                    <p className="font-medium dark:text-white">{nome||email}</p>
+                    <p className="text-xs text-gray-400">10/12/2023</p>
+                </div>
             </div>
-            <p>{mensagem}</p>
+
+            <p className="text-gray-700 dark:text-gray-300">{mensagem}</p>
             <div>
-                <button onClick={()=>setShow(e=>!e)}>{show? 'Ver menos': 'Ver respostas'}</button>
+                <button className="hover:bg-blue-100 text-blue-400 px-3 py-1 rounded-md  focus:ring-2 dark:hover:bg-slate-600" onClick={()=>setShow(e=>!e)}>{show? 'Ver menos': 'Ver respostas'}</button>
             </div>
             {show && <ContainerRespostas comentarioId={id} socket={socket} user={user} />}
-            <hr />
-            <hr />
+            
         </div>
      );
 }

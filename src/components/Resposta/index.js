@@ -1,14 +1,22 @@
+
 import Image from "next/image";
 
 function Resposta({resposta}) {
     const {usuario: {nome, email}, mensagem} = resposta;
     return ( 
-        <div>
-            <div>
-                <Image width={50} height={50} src="/usuarioPadrao.png" alt="avatar" />
-                <p>{nome || email}</p>
+        <div className="p-4  space-y-2 ">
+            <div className="flex h-16 space-x-2 ">
+                <div className="h-full">
+                    <Image src="/usuarioPadrao.png" width={100} height={100} className="h-full w-auto rounded-full" alt="user"/>
+                </div>
+                <div className="flex flex-col justify-center">
+                    <p className="font-medium dark:text-white">{nome || email}</p>
+                    <p className="text-xs text-gray-400">17/12/2023</p>
+                </div>
             </div>
-            <p>{mensagem}</p>
+            <p className="dark:text-gray-300">
+                {mensagem}
+            </p>
         </div>
      );
 }
