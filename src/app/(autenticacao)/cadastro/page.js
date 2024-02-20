@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 function Page() {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -80,6 +81,7 @@ function Page() {
                         dark:ring-blue-300  
                     "/>
                 <input type="submit" value="Cadastre-se" className="w-32 bg-blue-400 px-4 py-2 rounded text-white focus:ring-2"/>
+                <p className="text-gray-500 dark:text-gray-300">Já possui conta? <Link href="/login" className="text-blue-400 hover:text-blue-500 dark:hover:text-blue-500">Entre</Link></p>
             </form>
         
      );

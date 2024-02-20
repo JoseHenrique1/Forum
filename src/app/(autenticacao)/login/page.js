@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"
 
@@ -61,7 +62,8 @@ function Page() {
                         dark:border-slate-600
                         dark:ring-blue-300  
                     "/>
-            <input type="submit" value="Fazer login" className="w-32 bg-blue-400 px-4 py-2 rounded text-white focus:ring-2  " />
+            <input type="submit" value="Fazer login" className="w-32 bg-blue-400 px-4 py-2 rounded text-white focus:ring-2 "/>
+            <p className="text-gray-500 dark:text-gray-300">Ainda não possui conta? <Link href="/cadastro" className="text-blue-400 hover:text-blue-500 dark:hover:text-blue-500">Cadastre-se</Link></p>
         </form>
         
      );
