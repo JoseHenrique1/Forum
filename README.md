@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DiversityForum
 
-## Getting Started
+<img src="./public/Forum.png" alt="Exemplo imagem">
 
-First, run the development server:
+> Apresentamos o DiversityForum, um fórum online vibrante e dinâmico 
+  onde você pode se conectar com pessoas que compartilham seus interesses. 
+  Crie tópicos, participe de conversas e explore um mundo de conhecimento 
+  e ideias!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+
+## 💻 Pré-requisitos
+
+Antes de começar, verifique se você atendeu aos seguintes requisitos:
+
+* Você possui instalado o `Node.js`
+* Você possui a api do forum instalada, caso não tenha, clone esse [repósitorio](https://exemplo.com/) e siga o processo de instalação.
+
+
+## 🚀 Instalando DiversityForum
+
+Para instalar o DiversityForum, siga estas etapas:
+
+```
+npm i
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Configure suas variáveis de ambiente:
+```
+NEXTAUTH_URL=(url que está rodando o front-end)
+NEXTAUTH_SECRET=(chave do next auth, pode ser qualquer coisa)
+NEXT_PUBLIC_API_URL=(url da API)
+NEXT_PUBLIC_SOCKET_URL=(url da API com ws, ex: ws://localhost:3000 )
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## ☕ Usando DiversityForum
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Para usar DiversityForum, inicie a api antes de iniciar o front-end:
 
-## Learn More
+API
+```
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Front-end
+```
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🤝 Colaboradores
 
-## Deploy on Vercel
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/JoseHenrique1">
+        <img src="https://avatars.githubusercontent.com/u/104796730?v=4" width="100px;" alt="Foto do José Henrique no GitHub"/><br>
+        <sub>
+          <b>José Henrique</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
