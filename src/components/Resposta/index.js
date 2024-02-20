@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 function Resposta({resposta}) {
-    const {usuario: {nome, email}, mensagem} = resposta;
+    const {usuario: {nome, email}, mensagem, createdAt} = resposta;
     return ( 
         <div className="p-4  space-y-2 ">
             <div className="flex h-16 space-x-2 ">
@@ -11,7 +11,7 @@ function Resposta({resposta}) {
                 </div>
                 <div className="flex flex-col justify-center">
                     <p className="font-medium dark:text-white">{nome || email}</p>
-                    <p className="text-xs text-gray-400">17/12/2023</p>
+                    <p className="text-xs text-gray-400">{createdAt.slice(0,16).replace('T', ' ')}</p>
                 </div>
             </div>
             <p className="dark:text-gray-300">

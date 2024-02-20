@@ -5,7 +5,7 @@ import ContainerRespostas from "../ContainerRespostas";
 
 function Comentario({comment, user, socket}) {
     const [show, setShow] = useState(false);
-    const {id, mensagem, usuario:{nome, email}} = comment;
+    const {id, mensagem, createdAt, usuario:{nome, email}} = comment;
 
     return ( 
         <div className="bg-white p-4 space-y-2 shadow-md dark:bg-slate-700 dark:shadow-sm dark:shadow-blue-300">
@@ -15,7 +15,7 @@ function Comentario({comment, user, socket}) {
                 </div>
                 <div className="flex flex-col justify-center">
                     <p className="font-medium dark:text-white">{nome||email}</p>
-                    <p className="text-xs text-gray-400">10/12/2023</p>
+                    <p className="text-xs text-gray-400">{createdAt.slice(0,16).replace('T', ' ')}</p>
                 </div>
             </div>
 
